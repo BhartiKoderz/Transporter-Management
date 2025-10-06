@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {
@@ -23,16 +24,16 @@ interface SidebarProps {
 }
 
 const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-  { id: 'users', label: 'User & Role Management', icon: Users },
-  { id: 'customers', label: 'Customer Management', icon: UserCheck },
-  { id: 'transporters', label: 'Transporter & Fleet', icon: Truck },
-  { id: 'bookings', label: 'Booking & Orders', icon: BookOpen },
-  { id: 'dispatch', label: 'Dispatch & Routes', icon: Route },
-  { id: 'tracking', label: 'Shipment Tracking', icon: Package },
-  { id: 'billing', label: 'Billing & Invoicing', icon: Receipt },
-  { id: 'documents', label: 'Document Management', icon: FileText },
-  { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
+  { id: 'dashboard', label: 'Dashboard', icon: BarChart3, path: '/' },
+  { id: 'users', label: 'User & Role Management', icon: Users, path: '/users' },
+  { id: 'customers', label: 'Customer Management', icon: UserCheck, path: '/customers' },
+  { id: 'transporters', label: 'Transporter & Fleet', icon: Truck, path: '/fleet' },
+  { id: 'bookings', label: 'Booking & Orders', icon: BookOpen, path: '/bookings' },
+  { id: 'dispatch', label: 'Dispatch & Routes', icon: Route, path: '/dispatch' },
+  { id: 'tracking', label: 'Shipment Tracking', icon: Package, path: '/shipment-tracking' },
+  { id: 'billing', label: 'Billing & Invoicing', icon: Receipt, path: '/billing' },
+  { id: 'documents', label: 'Document Management', icon: FileText, path: '/documents' },
+  { id: 'reports', label: 'Reports & Analytics', icon: BarChart3, path: '/reports' },
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'compliance', label: 'Compliance', icon: Shield },
   { id: 'settings', label: 'System Settings', icon: Settings },
@@ -58,15 +59,27 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
       <nav className="flex-1 px-4 space-y-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          return (
+          // Only render Link if item.path exists, otherwise render a button without Link
+          return item.path ? (
+            <Link key={item.id} to={item.path} onClick={() => setActiveTab(item.id)}>
+              <div
+                className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-colors ${activeTab === item.id
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  }`}
+              >
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                <span className="text-sm font-medium">{item.label}</span>
+              </div>
+            </Link>
+          ) : (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-colors ${
-                activeTab === item.id
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-              }`}
+              className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-colors ${activeTab === item.id
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm font-medium">{item.label}</span>
